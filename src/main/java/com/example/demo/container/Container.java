@@ -149,7 +149,7 @@ public class Container {
      * Method for loading objects. Uses the internally stored strategy object
      * @throws PersistenceException
      */
-    public List<UserStory> fetch() throws PersistenceException {
+    public List<UserStory> load() throws PersistenceException {
         if (this.strategy == null)
             throw new PersistenceException( PersistenceException.ExceptionType.NoStrategyIsSet,  "Strategy not initialized");
 
@@ -157,8 +157,12 @@ public class Container {
             this.openConnection();
             connectionOpen = true;
         }
-        List<UserStory> list = this.strategy.load();
-        this.list = list;
+        List<UserStory> dbStories = this.strategy.load();
+        for (UserStory dbstory: dbStories) {
+            if (!contains(dbstory)) {
+                this.list.add(dbstory);
+            }
+        }
         return this.list;
     }
 

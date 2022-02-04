@@ -38,7 +38,7 @@ public class ActorContainer {
 
     public Actor createActor(String role) throws PersistenceException {
         Actor actor = new Actor(role);
-        addElement(actor);
+        //addElement(actor);
         return actor;
     }
 }

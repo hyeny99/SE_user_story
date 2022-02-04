@@ -34,7 +34,7 @@ public class ContainerRepo {
     }
 
     public List<UserStory> loadAll () throws PersistenceException {
-        return container.fetch();
+        return container.load();
     }
 
     // store the list on MongoDB

@@ -1,7 +1,9 @@
 package com.example.demo.persistence;
+import com.example.demo.container.ActorContainer;
 import com.example.demo.data.Actor;
 import com.example.demo.data.UserStory;
 import com.example.demo.db.MongodbRepo;
+import com.example.demo.repo.ActorRepo;
 import org.bson.Document;
 
 import java.util.ArrayList;
@@ -10,6 +12,7 @@ import java.util.List;
 public class PersistenceStrategyMongoDB implements PersistenceStrategy<UserStory> {
 
     private MongodbRepo mongodbRepo;
+    private ActorRepo actorRepo;
 
     public PersistenceStrategyMongoDB () throws PersistenceException {
         openConnection();
@@ -53,17 +56,20 @@ public class PersistenceStrategyMongoDB implements PersistenceStrategy<UserStory
         try {
             List<Document> documents = mongodbRepo.fetchAll();
             List<UserStory> userStories = new ArrayList<>();
-//            for (Document document : documents) {
-//                UserStory userStory = new UserStory((Integer) document.get("storyId"), (String) document.get("description"),
-//                        (Double) document.get("glogerVal"), (Actor) document.get("actor"), (String) document.get("state"));
-//
-//                userStories.add(userStory);
-//            }
+            actorRepo = new ActorRepo();
+
+            for (Document document : documents) {
+
+                UserStory userStory = new UserStory((Integer) document.get("storyId"), (String) document.get("description"),
+                        (Double) document.get("glogerVal"), actorRepo.createActor((String) document.get("actor")), (String) document.get("state"));
+
+                userStories.add(userStory);
+            }
             return userStories;
 
         } catch (Exception e) {
             throw new PersistenceException(PersistenceException.ExceptionType.LoadFailure,
-                    "Data cannot be loaded from MongoDB!");
+                    e.getMessage()); //"Data cannot be loaded from MongoDB!"
         }
     }
 

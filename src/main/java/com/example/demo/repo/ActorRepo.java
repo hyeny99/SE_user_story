@@ -27,7 +27,19 @@ public class ActorRepo {
         return actorContainer.createActor(role);
     }
 
-    public List<Actor> loadAll() {
+    public void registerActor(Actor actor) throws PersistenceException {
+        actorContainer.addElement(actor);
+    }
+
+    public List<Actor> getCurrentList() {
         return actorContainer.getCurrentList();
+    }
+
+    public boolean isRegistered(String role) throws PersistenceException {
+        return actorContainer.isActorRegistered(role);
+    }
+
+    public void deregisterActor() throws PersistenceException {
+        actorContainer.deregisterActor();
     }
 }

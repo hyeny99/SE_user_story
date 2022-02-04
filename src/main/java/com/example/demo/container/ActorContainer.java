@@ -23,7 +23,7 @@ public class ActorContainer {
         this.list = new ArrayList<Actor>();
     }
 
-    private void addElement(Actor actor) throws PersistenceException {
+    public void addElement(Actor actor) throws PersistenceException {
         for (Actor a : list) {
             if (a.getRole().equals(actor.getRole()))
                 throw new PersistenceException(PersistenceException.ExceptionType.SaveFailure,
@@ -38,7 +38,19 @@ public class ActorContainer {
 
     public Actor createActor(String role) throws PersistenceException {
         Actor actor = new Actor(role);
-        //addElement(actor);
         return actor;
+    }
+
+    public boolean isActorRegistered(String role) throws PersistenceException {
+        for (Actor actor : this.list) {
+            String actorRole = actor.getRole();
+            if (actorRole.equals(role))
+                return true;
+        }
+        return false;
+    }
+
+    public void deregisterActor() throws PersistenceException {
+        this.list.remove(this.list.size() - 1);
     }
 }

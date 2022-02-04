@@ -25,7 +25,7 @@ public class DumpUserStoryCommand implements Callable<Integer> {
     @CommandLine.Option(
             names = {"-s", "--state"},
             description = "Show sorted output of all user stories")
-    String state = null;
+    String state;
 
 
     private ContainerRepo containerRepo;
@@ -41,16 +41,15 @@ public class DumpUserStoryCommand implements Callable<Integer> {
             List<UserStory> stories = containerRepo.dump();
 
             if (Objects.nonNull(state)) {
-                for (UserStory story: stories) {
-                    if (!story.getState().equals(state)) {
-                        stories.remove(story);
-                    }
-                }
+                stories = containerRepo.findByState(state);
             }
+
 
             for (UserStory story: stories) {
                 System.out.println(story);
             }
+
+            System.out.println("Found " + stories.size() + " user story(ies)!\n");
 
         } catch(Exception e) {
             throw new Exception(e);

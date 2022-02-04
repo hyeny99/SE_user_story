@@ -38,6 +38,12 @@ public class AnalyzeUserStoryCommand implements Callable<Integer> {
             description = "")
     Boolean detail;
 
+    @CommandLine.Option(
+            names = {"--hints"},
+            required = false,
+            description = "")
+    Boolean hint;
+
 
     private ContainerRepo containerRepo;
     private QualityRepo qualityRepo;
@@ -63,6 +69,11 @@ public class AnalyzeUserStoryCommand implements Callable<Integer> {
                 if (Objects.nonNull(detail)) {
                     String details = "\nDetails: \n" + qualityRepo.getDetails();
                     System.out.println(details);
+
+                    if (Objects.nonNull(hint)) {
+                        String hints = "Hints: \n" + qualityRepo.getHint();
+                        System.out.println(hints);
+                    }
                 }
 
             } else if(Objects.nonNull(all)) {

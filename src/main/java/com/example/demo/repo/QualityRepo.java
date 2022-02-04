@@ -9,12 +9,14 @@ import java.util.List;
 
 public class QualityRepo {
     private ContainerRepo containerRepo;
+    private ActorRepo actorRepo;
     private String details;
     private String hint;
     double val;
 
     public QualityRepo() {
         containerRepo = new ContainerRepo();
+        actorRepo = new ActorRepo();
         details = "";
         hint = "";
         val = 100;
@@ -47,9 +49,11 @@ public class QualityRepo {
                 this.hint += "Add an importance value!\n";
             }
 
-            if (document.get("actor") == null || document.get("actor").equals("")) {
+            if (document.get("actor") == null ||
+                    document.get("actor").equals("") ||
+                    !actorRepo.isRegistered((String) document.get("actor"))) {
                 this.val -= 20;
-                this.details += "Actor" + document.get("actor") + " is unknown (-20%)\n";
+                this.details += "Actor '" + document.get("actor") + "' is unknown (-20%)\n";
                 this.hint += "Register an actor!\n";
             }
 

@@ -25,12 +25,20 @@ public class ContainerRepo {
         System.out.println("successfully deleted!");
     }
 
-    public void update(String key, String value) {
-        container.update(key, value);
+    public void undoEnter() {
+        container.undoEnter();
+    }
+
+    public void update(int id, String key, String value) throws PersistenceException {
+        container.update(id, key, value);
     }
 
     public List<UserStory> dump () {
         return container.getCurrentList();
+    }
+
+    public List<UserStory> findByState(String state) {
+        return container.findByState(state);
     }
 
     public List<UserStory> loadAll () throws PersistenceException {

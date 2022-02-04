@@ -41,6 +41,12 @@ public class StateUserStoryCommand implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
         try {
+            if (state.equals("done") || state.equals("progress") || state.equals("todo")) {
+                containerRepo.update(id, "state", state);
+                System.out.println("State has been successfully updated! \n");
+            } else {
+                throw new Exception("State not supported.");
+            }
 
         } catch(Exception e) {
             throw new Exception("Failed to update.");

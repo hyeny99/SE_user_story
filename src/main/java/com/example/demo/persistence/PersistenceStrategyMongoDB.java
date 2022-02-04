@@ -92,4 +92,14 @@ public class PersistenceStrategyMongoDB implements PersistenceStrategy<UserStory
                     "Data cannot be found in MongoDB!");
         }
     }
+
+
+    @Override
+    public void update(int id, String key, String value) throws PersistenceException {
+        try {
+            mongodbRepo.updateUserStory(id, key, value);
+        } catch (Exception e) {
+            throw new PersistenceException(PersistenceException.ExceptionType.SaveFailure, "Data cannot be updated! ");
+        }
+    }
 }

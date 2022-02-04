@@ -6,9 +6,7 @@ import com.example.demo.persistence.PersistenceStrategy;
 import com.example.demo.persistence.PersistenceStrategyMongoDB;
 import org.bson.Document;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class Container {
     private List<UserStory> list = null;
@@ -73,6 +71,15 @@ public class Container {
         return this.list;
     }
 
+    public List findByState(String state) {
+        List<UserStory> statusList = new ArrayList<>();
+        for (UserStory userStory: this.list) {
+            if (userStory.getState().equals(state))
+                statusList.add(userStory);
+        }
+        return statusList;
+    }
+
     /**
      * Method for adding Member-objects
      * @param userStory
@@ -117,6 +124,12 @@ public class Container {
         }
     }
 
+    public void undoEnter() {
+        if (!list.isEmpty()) {
+            this.list.remove(this.list.size() - 1);
+        }
+    }
+
     /*
      * Method for getting the number of currently stored objects
      *
@@ -125,10 +138,6 @@ public class Container {
         return list.size();
     }
 
-
-    public void update(String key, String value) {
-
-    }
 
 
     /*
@@ -158,11 +167,11 @@ public class Container {
             connectionOpen = true;
         }
         List<UserStory> dbStories = this.strategy.load();
-        for (UserStory dbstory: dbStories) {
-            if (!contains(dbstory)) {
-                this.list.add(dbstory);
-            }
-        }
+        Set<UserStory> dbSet = new TreeSet<>(Comparator.comparing(UserStory::getID));
+        dbSet.addAll(dbStories);
+        dbSet.addAll(this.list);
+
+        this.list = new ArrayList<>(dbSet);
         return this.list;
     }
 
@@ -227,6 +236,18 @@ public class Container {
         }
         Document document = this.strategy.findById(id);
         return document;
+    }
+
+    public void update(int id, String key, String value) throws PersistenceException {
+        if (this.strategy == null)
+            throw new PersistenceException( PersistenceException.ExceptionType.NoStrategyIsSet,
+                    "Strategy not initialized");
+
+        if (connectionOpen == false) {
+            this.openConnection();
+            connectionOpen = true;
+        }
+        strategy.update(id, key, value);
     }
 
     private void openConnection() throws PersistenceException {

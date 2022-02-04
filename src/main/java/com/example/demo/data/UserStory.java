@@ -11,7 +11,7 @@ public class UserStory implements Serializable {
     private String description = null;
     private Double glogerVal = 0.0;
     private Actor actor;
-    private String state = null;
+    private String state = "undefined";
 
     public UserStory() {
         actor = new Actor();
@@ -97,7 +97,7 @@ public class UserStory implements Serializable {
                 ", glogerVal='" + glogerVal + '\'' +
                 ", actor='" + actor.getRole() + '\'' +
                 ", state='" + this.state +
-                '}';
+                "'}";
     }
 
     public Document toDocument() {

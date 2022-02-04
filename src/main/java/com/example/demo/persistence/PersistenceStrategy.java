@@ -11,4 +11,5 @@ public interface PersistenceStrategy<UserStory> {
     public List<UserStory> load() throws PersistenceException;
     public Document findById(Integer id) throws PersistenceException;
     public List<Document> query(String key, String value) throws PersistenceException;
+    public void update(int id, String key, String value) throws PersistenceException;
 }

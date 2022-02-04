@@ -12,6 +12,6 @@ public interface MongodbController {
     public List<Document> fetchAll();
     public List<Document> query(String key, String value);
     public void deleteUserStory();
-    public void updateUserStory();
+    public void updateUserStory(int id, String key, String value);
 
 }

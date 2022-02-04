@@ -3,6 +3,8 @@ package com.example.demo.picocliCommand.sub;
 
 import com.example.demo.data.Actor;
 import com.example.demo.data.UserStory;
+import com.example.demo.persistence.PersistenceException;
+import com.example.demo.picocliCommand.Command;
 import com.example.demo.repo.ActorRepo;
 import com.example.demo.repo.ContainerRepo;
 import picocli.CommandLine;
@@ -20,7 +22,7 @@ import java.util.concurrent.Callable;
         optionListHeading = "%nOptions are:%n",
         footerHeading = "%nCopyright",
         footer = "%nDeveloped by Hyewon Jeon")
-public class EnterUserStoryCommand implements Callable<Integer> {
+public class EnterUserStoryCommand implements Callable<Integer>, Command {
 
     @CommandLine.Option(
             names = {"--id"},
@@ -79,4 +81,8 @@ public class EnterUserStoryCommand implements Callable<Integer> {
         return 0;
     }
 
+    @Override
+    public void undo() {
+        containerRepo.undoEnter();
+    }
 }

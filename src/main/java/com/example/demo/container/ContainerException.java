@@ -1,7 +1,6 @@
 package com.example.demo.container;
 
 public class ContainerException extends Exception{
-    private String modus;
     private Integer id;
     private ExceptionType type;
 

@@ -29,9 +29,13 @@ public class ActorCommand implements Callable<Integer> {
     public Integer call() throws Exception {
 
         try {
-           List<Actor> actors = actorRepo.loadAll();
-           for(Actor actor : actors) {
-               System.out.println(actor.getRole());
+           List<Actor> actors = actorRepo.getCurrentList();
+           if (actors.isEmpty()) {
+               System.out.println("no actors given");
+           } else {
+               for(Actor actor : actors) {
+                   System.out.println(actor.getRole());
+               }
            }
 
         } catch(Exception e) {

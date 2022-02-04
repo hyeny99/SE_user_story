@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.set;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
@@ -77,7 +78,9 @@ public class MongodbRepo implements MongodbController {
     }
 
     @Override
-    public void updateUserStory() {
-
+    public void updateUserStory(int id, String key, String value) {
+        if(findById(id) != null) {
+            collection.updateOne(eq("storyId", id), set(key, value));
+        }
     }
 }

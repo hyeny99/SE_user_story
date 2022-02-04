@@ -24,7 +24,9 @@ import java.util.concurrent.Callable;
                 LoadUserStoryCommand.class,
                 AnalyzeUserStoryCommand.class,
                 ActorCommand.class,
-                AddActorCommand.class
+                AddActorCommand.class,
+                StateUserStoryCommand.class,
+                UndoCommand.class
         }
 )
 public class PicocliController implements Callable<Integer> {

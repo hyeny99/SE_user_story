@@ -3,14 +3,12 @@ package com.example.demo.picocliCommand.sub;
 
 import com.example.demo.data.Actor;
 import com.example.demo.data.UserStory;
-import com.example.demo.persistence.PersistenceException;
 import com.example.demo.picocliCommand.Command;
 import com.example.demo.repo.ActorRepo;
 import com.example.demo.repo.ContainerRepo;
 import picocli.CommandLine;
 
 import java.util.Objects;
-import java.util.Scanner;
 import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "enter",
@@ -49,8 +47,8 @@ public class EnterUserStoryCommand implements Callable<Integer>, Command {
     String actor = null;
 
 
-    private ContainerRepo containerRepo;
-    private ActorRepo actorRepo;
+    private final ContainerRepo containerRepo;
+    private final ActorRepo actorRepo;
 
 
     public EnterUserStoryCommand() {

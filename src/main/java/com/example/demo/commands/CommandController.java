@@ -4,7 +4,6 @@ import com.example.demo.container.ContainerException;
 import com.example.demo.data.UserStory;
 import com.example.demo.persistence.PersistenceException;
 import com.example.demo.repo.ContainerRepo;
-import org.bson.Document;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -12,8 +11,8 @@ import java.util.*;
 
 public class CommandController {
 
-    private ContainerRepo containerRepo;
-    private Command command;
+    private final ContainerRepo containerRepo;
+    private final Command command;
     BufferedReader reader;
     Scanner numScanner;
     Scanner stringScanner;

@@ -9,16 +9,12 @@ import java.util.List;
 
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.set;
-import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
-import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 public class MongodbRepo implements MongodbController {
 
-//    private MongoDatabase _db;
-//    private MongoCollection<Member> collection;
-    private com.mongodb.client.MongoClient client;
-    private MongoDatabase database;
-    private MongoCollection<Document> collection;
+    private final MongoClient client;
+    private final MongoDatabase database;
+    private final MongoCollection<Document> collection;
 
 
     public MongodbRepo () {
@@ -46,8 +42,7 @@ public class MongodbRepo implements MongodbController {
     }
 
     public Document findById(Integer id) {
-        Document document = collection.find(eq("storyId", id)).first();
-        return document;
+        return collection.find(eq("storyId", id)).first();
     }
 
     @Override

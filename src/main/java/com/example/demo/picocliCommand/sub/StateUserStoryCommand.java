@@ -1,9 +1,7 @@
 package com.example.demo.picocliCommand.sub;
 
 
-import com.example.demo.data.UserStory;
 import com.example.demo.repo.ContainerRepo;
-import org.bson.Document;
 import picocli.CommandLine;
 
 import java.util.concurrent.Callable;
@@ -31,7 +29,7 @@ public class StateUserStoryCommand implements Callable<Integer> {
             description = "")
     String state;
 
-    private ContainerRepo containerRepo;
+    private final ContainerRepo containerRepo;
 
 
     public StateUserStoryCommand() {

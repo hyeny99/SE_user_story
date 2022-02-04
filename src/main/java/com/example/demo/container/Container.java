@@ -64,7 +64,6 @@ public class Container {
 
     /**
      * Method for getting the internal list. e.g. from a View-object
-     * @return
      */
     public List getCurrentList() {
         list.sort(Comparator.comparing(UserStory::getGlogerVal).reversed());
@@ -82,13 +81,11 @@ public class Container {
 
     /**
      * Method for adding Member-objects
-     * @param userStory
-     * @throws ContainerException
      */
     public void addUserStory ( UserStory userStory ) throws ContainerException {
 
         if ( contains( userStory )  ) {
-            System.out.println("Duplicate: " + userStory.toString() );
+            System.out.println("Duplicate: " + userStory);
             ContainerException ex = new ContainerException( ContainerException.ExceptionType.DuplicateMember );
             ex.addID ( userStory.getID() );
             throw ex;
@@ -103,7 +100,7 @@ public class Container {
     private boolean contains( UserStory userStory ) {
         Integer ID = userStory.getID();
         for ( UserStory story : list) {
-            if ( story.getID() == ID ) {
+            if (story.getID().equals(ID)) {
                 return true;
             }
         }
@@ -146,7 +143,7 @@ public class Container {
      */
     private UserStory getUserStory(Integer id) {
         for ( UserStory userStory : list) {
-            if ( id == userStory.getID() ){
+            if (id.equals(userStory.getID())){
                 return userStory;
             }
         }
@@ -156,7 +153,6 @@ public class Container {
 
     /**
      * Method for loading objects. Uses the internally stored strategy object
-     * @throws PersistenceException
      */
     public List<UserStory> load() throws PersistenceException {
         if (this.strategy == null)
@@ -193,7 +189,6 @@ public class Container {
      * ToDo here: delegate the exception to the client in case of problems when closing the connection
      * (not really relevant in the context of this assignment)
      *
-     * @param persistenceStrategy
      */
     public void setPersistenceStrategie(PersistenceStrategy persistenceStrategy) {
         if (connectionOpen == true) {
@@ -210,7 +205,6 @@ public class Container {
 
     /**
      * Method for storing objects. Uses the internally stored strategy object
-     * @throws PersistenceException
      */
     public void store() throws PersistenceException {
         if (this.strategy == null)
@@ -234,8 +228,7 @@ public class Container {
             this.openConnection();
             connectionOpen = true;
         }
-        Document document = this.strategy.findById(id);
-        return document;
+        return this.strategy.findById(id);
     }
 
     public void update(int id, String key, String value) throws PersistenceException {

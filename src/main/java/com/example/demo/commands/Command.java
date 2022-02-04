@@ -7,7 +7,7 @@ public class Command {
     private String arg;
     private String name;
     private String desc;
-    private List<Command> commands;
+    private final List<Command> commands;
 
     public Command() {
         commands = new ArrayList<>();

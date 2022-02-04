@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ActorContainer {
-    private List<Actor> list = null;
+    private final List<Actor> list;
     private static ActorContainer instance = null;
 
     public static synchronized ActorContainer getInstance() {
@@ -37,8 +37,7 @@ public class ActorContainer {
     }
 
     public Actor createActor(String role) throws PersistenceException {
-        Actor actor = new Actor(role);
-        return actor;
+        return new Actor(role);
     }
 
     public boolean isActorRegistered(String role) throws PersistenceException {

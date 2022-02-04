@@ -1,21 +1,15 @@
 package com.example.demo.picocliCommand;
 
-import com.example.demo.container.Container;
-import com.example.demo.data.UserStory;
-import com.example.demo.persistence.PersistenceException;
-import com.example.demo.persistence.PersistenceStrategyMongoDB;
 import com.example.demo.picocliCommand.sub.*;
 import picocli.CommandLine;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Stack;
-import java.util.concurrent.Callable;
 
 public class CommandHandler {
 
-    private Stack<Command> stack;
+    private final Stack<Command> stack;
     private static CommandHandler instance = null;
 
     public static synchronized CommandHandler getInstance() {
@@ -37,7 +31,7 @@ public class CommandHandler {
     public void startEingabe()  {
 
         // Initialisierung der Kommandos
-        HashMap<String, Command> commandsMap = new HashMap();
+        HashMap<String, Command> commandsMap = new HashMap<>();
         commandsMap.put( "enter", new EnterUserStoryCommand());
         commandsMap.put(  "addElement" , new AddActorCommand());
 

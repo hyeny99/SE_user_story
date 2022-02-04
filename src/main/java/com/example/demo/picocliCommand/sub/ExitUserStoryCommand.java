@@ -21,7 +21,7 @@ public class ExitUserStoryCommand implements Callable<Integer> {
             description = "Terminate the program")
     boolean exit;
 
-    private ContainerRepo containerRepo;
+    private final ContainerRepo containerRepo;
 
     public ExitUserStoryCommand() {
         containerRepo = new ContainerRepo();

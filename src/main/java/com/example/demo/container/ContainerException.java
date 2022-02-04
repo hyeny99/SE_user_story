@@ -2,7 +2,7 @@ package com.example.demo.container;
 
 public class ContainerException extends Exception{
     private Integer id;
-    private ExceptionType type;
+    private final ExceptionType type;
 
     public ContainerException(ExceptionType type  ) {
         this.type = type;

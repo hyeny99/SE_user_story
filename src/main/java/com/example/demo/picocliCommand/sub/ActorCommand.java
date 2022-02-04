@@ -2,7 +2,6 @@ package com.example.demo.picocliCommand.sub;
 
 
 import com.example.demo.data.Actor;
-import com.example.demo.data.UserStory;
 import com.example.demo.repo.ActorRepo;
 import picocli.CommandLine;
 
@@ -20,7 +19,7 @@ import java.util.concurrent.Callable;
         footer = "%nDeveloped by Hyewon Jeon")
 public class ActorCommand implements Callable<Integer> {
 
-    private ActorRepo actorRepo;
+    private final ActorRepo actorRepo;
     public ActorCommand () {
         actorRepo = new ActorRepo();
     }

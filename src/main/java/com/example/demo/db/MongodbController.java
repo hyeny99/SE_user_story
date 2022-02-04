@@ -8,10 +8,10 @@ import java.util.List;
 // CRUD
 public interface MongodbController {
 
-    public void store(UserStory userStory);
-    public List<Document> fetchAll();
-    public List<Document> query(String key, String value);
-    public void deleteUserStory();
-    public void updateUserStory(int id, String key, String value);
+    void store(UserStory userStory);
+    List<Document> fetchAll();
+    List<Document> query(String key, String value);
+    void deleteUserStory();
+    void updateUserStory(int id, String key, String value);
 
 }

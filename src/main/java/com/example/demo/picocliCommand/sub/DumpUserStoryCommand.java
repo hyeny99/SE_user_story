@@ -4,11 +4,8 @@ import com.example.demo.data.UserStory;
 import com.example.demo.repo.ContainerRepo;
 import picocli.CommandLine;
 
-import javax.swing.text.Document;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Scanner;
 import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "dump",
@@ -28,7 +25,7 @@ public class DumpUserStoryCommand implements Callable<Integer> {
     String state;
 
 
-    private ContainerRepo containerRepo;
+    private final ContainerRepo containerRepo;
 
 
     public DumpUserStoryCommand() {

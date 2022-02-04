@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ActorRepo {
     private String role;
-    private ActorContainer actorContainer;
+    private final ActorContainer actorContainer;
 
     public ActorRepo() {
         actorContainer = ActorContainer.getInstance();

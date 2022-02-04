@@ -1,12 +1,9 @@
 package com.example.demo.picocliCommand.sub;
 
-import com.example.demo.data.UserStory;
 import com.example.demo.repo.ContainerRepo;
 import com.example.demo.repo.QualityRepo;
-import org.bson.Document;
 import picocli.CommandLine;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Callable;
 
@@ -45,8 +42,8 @@ public class AnalyzeUserStoryCommand implements Callable<Integer> {
     Boolean hint;
 
 
-    private ContainerRepo containerRepo;
-    private QualityRepo qualityRepo;
+    private final ContainerRepo containerRepo;
+    private final QualityRepo qualityRepo;
 
 
     public AnalyzeUserStoryCommand() {

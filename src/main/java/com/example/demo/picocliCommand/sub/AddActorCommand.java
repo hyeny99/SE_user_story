@@ -24,7 +24,7 @@ public class AddActorCommand implements Callable<Integer>, Command {
             required = true)
     String role;
 
-    private ActorRepo actorRepo;
+    private final ActorRepo actorRepo;
 
     public AddActorCommand() {
         actorRepo = new ActorRepo();

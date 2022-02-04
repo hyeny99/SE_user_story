@@ -9,7 +9,7 @@ import org.bson.Document;
 import java.util.List;
 
 public class ContainerRepo {
-    private Container container;
+    private final Container container;
 
     public ContainerRepo() {
         container = Container.getInstance();

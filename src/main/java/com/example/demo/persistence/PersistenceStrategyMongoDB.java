@@ -1,6 +1,4 @@
 package com.example.demo.persistence;
-import com.example.demo.container.ActorContainer;
-import com.example.demo.data.Actor;
 import com.example.demo.data.UserStory;
 import com.example.demo.db.MongodbRepo;
 import com.example.demo.repo.ActorRepo;
@@ -76,8 +74,7 @@ public class PersistenceStrategyMongoDB implements PersistenceStrategy<UserStory
 
     public Document findById(Integer id) throws PersistenceException {
         try {
-            Document document = mongodbRepo.findById(id);
-            return document;
+            return mongodbRepo.findById(id);
         } catch (Exception e) {
             throw new PersistenceException(PersistenceException.ExceptionType.LoadFailure,
                     "Data cannot be found in MongoDB!");

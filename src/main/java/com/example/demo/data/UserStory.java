@@ -1,6 +1,5 @@
 package com.example.demo.data;
 
-import com.example.demo.repo.ActorRepo;
 import org.bson.Document;
 
 import java.io.Serializable;

@@ -4,12 +4,11 @@ import com.example.demo.data.UserStory;
 import com.example.demo.persistence.PersistenceException;
 import org.bson.Document;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class QualityRepo {
-    private ContainerRepo containerRepo;
-    private ActorRepo actorRepo;
+    private final ContainerRepo containerRepo;
+    private final ActorRepo actorRepo;
     private String details;
     private String hint;
     double val;

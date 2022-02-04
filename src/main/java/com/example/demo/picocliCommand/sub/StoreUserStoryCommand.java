@@ -1,6 +1,5 @@
 package com.example.demo.picocliCommand.sub;
 
-import com.example.demo.data.UserStory;
 import com.example.demo.repo.ContainerRepo;
 import picocli.CommandLine;
 
@@ -23,7 +22,7 @@ public class StoreUserStoryCommand implements Callable<Integer> {
     )
     boolean store;
 
-    private ContainerRepo containerRepo;
+    private final ContainerRepo containerRepo;
 
     public StoreUserStoryCommand() {
         containerRepo = new ContainerRepo();

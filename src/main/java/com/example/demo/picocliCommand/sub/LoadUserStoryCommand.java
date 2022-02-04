@@ -3,7 +3,6 @@ package com.example.demo.picocliCommand.sub;
 
 import com.example.demo.data.UserStory;
 import com.example.demo.repo.ContainerRepo;
-import org.bson.Document;
 import picocli.CommandLine;
 
 import java.util.List;
@@ -22,7 +21,7 @@ public class LoadUserStoryCommand implements Callable<Integer> {
 
 
 
-    private ContainerRepo containerRepo;
+    private final ContainerRepo containerRepo;
 
 
     public LoadUserStoryCommand() {

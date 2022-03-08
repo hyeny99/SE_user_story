@@ -3,7 +3,7 @@ package com.example.demo;
 
 import com.example.demo.commands.CommandController;
 import com.example.demo.container.ContainerException;
-import com.example.demo.persistence.PersistenceException;
+import com.example.demo.strategy.db.PersistenceException;
 import com.example.demo.picocliCommand.CommandHandler;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

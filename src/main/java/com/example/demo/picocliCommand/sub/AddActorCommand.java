@@ -1,6 +1,6 @@
 package com.example.demo.picocliCommand.sub;
 
-import com.example.demo.persistence.PersistenceException;
+import com.example.demo.strategy.db.PersistenceException;
 import com.example.demo.picocliCommand.Command;
 import com.example.demo.repo.ActorRepo;
 import picocli.CommandLine;

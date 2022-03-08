@@ -1,7 +1,7 @@
 package com.example.demo.container;
 
 import com.example.demo.data.Actor;
-import com.example.demo.persistence.PersistenceException;
+import com.example.demo.strategy.db.PersistenceException;
 
 import java.util.ArrayList;
 import java.util.List;

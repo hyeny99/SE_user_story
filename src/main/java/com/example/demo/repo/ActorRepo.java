@@ -2,7 +2,7 @@ package com.example.demo.repo;
 
 import com.example.demo.container.ActorContainer;
 import com.example.demo.data.Actor;
-import com.example.demo.persistence.PersistenceException;
+import com.example.demo.strategy.db.PersistenceException;
 
 import java.util.List;
 

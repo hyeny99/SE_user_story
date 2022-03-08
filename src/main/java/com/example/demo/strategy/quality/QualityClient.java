@@ -1,64 +1,54 @@
-package com.example.demo.repo;
+package com.example.demo.strategy.quality;
 
+import com.example.demo.container.ContainerRepo;
 import com.example.demo.data.UserStory;
-import com.example.demo.persistence.PersistenceException;
+import com.example.demo.repo.ActorRepo;
+import com.example.demo.strategy.db.PersistenceException;
 import org.bson.Document;
 
 import java.util.List;
 
-public class QualityRepo {
+public class QualityClient {
+
     private final ContainerRepo containerRepo;
     private final ActorRepo actorRepo;
-    private String details;
-    private String hint;
+
+    private QualityStrategy qualityDescStrategy;
+
+    private String desc;
     double val;
 
-    public QualityRepo() {
+    public QualityClient(QualityStrategy qualityDescStrategy) {
+        this.qualityDescStrategy = qualityDescStrategy;
+
         containerRepo = new ContainerRepo();
         actorRepo = new ActorRepo();
-        details = "";
-        hint = "";
+        desc = "";
         val = 100;
-    }
-
-    public String getDetails() {
-        return details;
-    }
-
-    public String getHint() {
-        return hint;
-    }
-
-    public double getVal() {
-        return val;
     }
 
     public double calculateQuality(Integer id) throws PersistenceException {
         Document document = containerRepo.get(id);
         if (document != null) {
-            if (document.get("description") == null){
+            if (!((String) document.get("description")).contains("so that")
+                    && !((String) document.get("description")).contains("should")){
                 this.val -= 30;
-                this.details += "No written benefit to be identified (-30%)\n";
-                this.hint += "Add a written benefit!\n";
+                this.desc += this.qualityDescStrategy.insufficientDesc();
             }
 
             if (document.get("glogerVal") == null || (Double) document.get("glogerVal") == 0.0){
                 this.val -= 20;
-                this.details += "No importance value (gloger value) to be identified (-20%)\n";
-                this.hint += "Add an importance value!\n";
+                this.desc += this.qualityDescStrategy.missingGloger();
             }
 
             if (document.get("actor") == null ||
-                    document.get("actor").equals("") ||
-                    !actorRepo.isRegistered((String) document.get("actor"))) {
+                    document.get("actor").equals("") || !actorRepo.isRegistered((String) document.get("actor"))) {
                 this.val -= 20;
-                this.details += "Actor '" + document.get("actor") + "' is unknown (-20%)\n";
-                this.hint += "Register an actor!\n";
+                this.desc += this.qualityDescStrategy.notRegisteredActor((String) document.get("actor"));
             }
 
             if (val == 100) {
-                this.details += "Everything OK";
-                this.hint += "Everything OK";
+                this.desc += this.qualityDescStrategy.sufficient();
             }
 
             return this.val;
@@ -67,6 +57,10 @@ public class QualityRepo {
             throw new PersistenceException(PersistenceException.ExceptionType.LoadFailure,
                     "story not found");
         }
+    }
+
+    public String getDesc() {
+        return this.desc;
     }
 
     public double calculateAvg() throws PersistenceException {
@@ -105,5 +99,4 @@ public class QualityRepo {
 
         return eval;
     }
-
 }

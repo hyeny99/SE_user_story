@@ -1,7 +1,9 @@
 package com.example.demo.picocliCommand.sub;
 
-import com.example.demo.repo.ContainerRepo;
-import com.example.demo.repo.QualityRepo;
+import com.example.demo.container.ContainerRepo;
+import com.example.demo.strategy.quality.QualityClient;
+import com.example.demo.strategy.quality.QualityStrategyDetails;
+import com.example.demo.strategy.quality.QualityStrategyHints;
 import picocli.CommandLine;
 
 import java.util.Objects;
@@ -43,12 +45,14 @@ public class AnalyzeUserStoryCommand implements Callable<Integer> {
 
 
     private final ContainerRepo containerRepo;
-    private final QualityRepo qualityRepo;
+    private QualityClient qualityClientDetails;
+    private QualityClient qualityClientHints;
 
 
     public AnalyzeUserStoryCommand() {
         containerRepo = new ContainerRepo();
-        qualityRepo = new QualityRepo();
+        qualityClientDetails = new QualityClient(new QualityStrategyDetails());
+        qualityClientHints = new QualityClient(new QualityStrategyHints());
     }
 
     @Override
@@ -56,27 +60,28 @@ public class AnalyzeUserStoryCommand implements Callable<Integer> {
         try {
             String dialog = "";
             if(Objects.nonNull(id)) {
-                double val = qualityRepo.calculateQuality(id);
-                String eval = qualityRepo.classify(val);
+                double val = qualityClientDetails.calculateQuality(id);
+                String eval = qualityClientDetails.classify(val);
                 dialog += "The user story with the ID number " + id + " is of the following quality: \n";
                 dialog += val + " % (" + eval +  ")";
 
                 System.out.println(dialog);
 
                 if (Objects.nonNull(detail)) {
-                    String details = "\nDetails: \n" + qualityRepo.getDetails();
+                    String details = "\nDetails: \n" + qualityClientDetails.getDesc();
                     System.out.println(details);
 
                     if (Objects.nonNull(hint)) {
-                        String hints = "Hints: \n" + qualityRepo.getHint();
+                        qualityClientHints.calculateQuality(id);
+                        String hints = "Hints: \n" + qualityClientHints.getDesc();
                         System.out.println(hints);
                     }
                 }
 
             } else if(Objects.nonNull(all)) {
-                double val = qualityRepo.calculateAvg();
                 int size = containerRepo.size();
-                String eval = qualityRepo.classify(val);
+                double val = qualityClientDetails.calculateAvg();
+                String eval = qualityClientDetails.classify(val);
 
                 dialog += "Your " +  size + " user stories are of the following average quality: \n";
                 dialog += val + " % (" + eval +  ")";

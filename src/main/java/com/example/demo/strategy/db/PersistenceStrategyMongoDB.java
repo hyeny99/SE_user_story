@@ -1,16 +1,22 @@
-package com.example.demo.persistence;
+package com.example.demo.strategy.db;
 import com.example.demo.data.UserStory;
-import com.example.demo.db.MongodbRepo;
 import com.example.demo.repo.ActorRepo;
+import com.mongodb.client.*;
 import org.bson.Document;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PersistenceStrategyMongoDB implements PersistenceStrategy<UserStory> {
+import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.set;
 
-    private MongodbRepo mongodbRepo;
+public class PersistenceStrategyMongoDB implements DBPersistenceStrategy<UserStory> {
+
     private ActorRepo actorRepo;
+
+    private MongoClient client;
+    private MongoDatabase database;
+    private MongoCollection<Document> collection;
 
     public PersistenceStrategyMongoDB () throws PersistenceException {
         openConnection();
@@ -19,7 +25,15 @@ public class PersistenceStrategyMongoDB implements PersistenceStrategy<UserStory
     @Override
     public void openConnection() throws PersistenceException {
         try {
-            mongodbRepo = new MongodbRepo();
+            // Setting up the connection to a local MongoDB with standard port 27017
+            // must be started within a terminal with command 'mongodb';
+            client = MongoClients.create("mongodb://localhost:27017");
+
+            // Get database 'SE2final' (creates one if not available)
+            database = client.getDatabase("SE2final");
+
+            // // Get Collection 'userstory' (creates one if not available)
+            collection = database.getCollection("userstory");
         } catch (Exception e) {
             throw new PersistenceException(PersistenceException.ExceptionType.ConnectionNotAvailable, "MongoDB not connected!");
         }
@@ -28,7 +42,7 @@ public class PersistenceStrategyMongoDB implements PersistenceStrategy<UserStory
     @Override
     public void closeConnection() throws PersistenceException {
         try {
-            mongodbRepo.getMongoClient().close();
+            this.client.close();
         } catch (Exception e) {
             throw new PersistenceException(PersistenceException.ExceptionType.ClosingFailure,
                     "MongoDB connection cannot be closed!");
@@ -38,21 +52,27 @@ public class PersistenceStrategyMongoDB implements PersistenceStrategy<UserStory
     @Override
     public void save(List<UserStory> stories) throws PersistenceException {
         try {
-            for (UserStory story: stories) {
-                mongodbRepo.store(story);
+            for (UserStory userStory: stories) {
+                if(findById(userStory.getID()) == null){
+                    collection.insertOne(userStory.toDocument());
+                }
             }
         } catch (Exception e) {
             throw new PersistenceException(PersistenceException.ExceptionType.SaveFailure,
                     "Cannot be saved to MongoDB!");
 
         }
-
     }
 
     @Override
     public List<UserStory> load() throws PersistenceException {
         try {
-            List<Document> documents = mongodbRepo.fetchAll();
+            List<Document> documents = new ArrayList<>();
+            MongoCursor<Document> cursor = collection.find().iterator();
+            while (cursor.hasNext()) {
+                documents.add(cursor.next());
+            }
+
             List<UserStory> userStories = new ArrayList<>();
             actorRepo = new ActorRepo();
 
@@ -74,7 +94,7 @@ public class PersistenceStrategyMongoDB implements PersistenceStrategy<UserStory
 
     public Document findById(Integer id) throws PersistenceException {
         try {
-            return mongodbRepo.findById(id);
+            return collection.find(eq("storyId", id)).first();
         } catch (Exception e) {
             throw new PersistenceException(PersistenceException.ExceptionType.LoadFailure,
                     "Data cannot be found in MongoDB!");
@@ -83,7 +103,12 @@ public class PersistenceStrategyMongoDB implements PersistenceStrategy<UserStory
 
     public List<Document> query(String key, String value) throws PersistenceException{
         try{
-            return mongodbRepo.query(key, value);
+            List<Document> documents = new ArrayList<>();
+            MongoCursor<Document> cursor = collection.find(eq(key, value)).iterator();
+            while (cursor.hasNext()) {
+                documents.add(cursor.next());
+            }
+            return documents;
         } catch (Exception e) {
             throw new PersistenceException(PersistenceException.ExceptionType.LoadFailure,
                     "Data cannot be found in MongoDB!");
@@ -94,7 +119,9 @@ public class PersistenceStrategyMongoDB implements PersistenceStrategy<UserStory
     @Override
     public void update(int id, String key, String value) throws PersistenceException {
         try {
-            mongodbRepo.updateUserStory(id, key, value);
+            if(findById(id) != null) {
+                collection.updateOne(eq("storyId", id), set(key, value));
+            }
         } catch (Exception e) {
             throw new PersistenceException(PersistenceException.ExceptionType.SaveFailure, "Data cannot be updated! ");
         }

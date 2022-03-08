@@ -5,10 +5,12 @@ import com.example.demo.data.Actor;
 import com.example.demo.data.UserStory;
 import com.example.demo.picocliCommand.Command;
 import com.example.demo.repo.ActorRepo;
-import com.example.demo.repo.ContainerRepo;
+import com.example.demo.container.ContainerRepo;
 import picocli.CommandLine;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.Stack;
 import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "enter",
@@ -30,9 +32,10 @@ public class EnterUserStoryCommand implements Callable<Integer>, Command {
 
     @CommandLine.Option(
             names = {"--desc"},
-            required = false,
+            arity = "1..*",
+            required = true,
             description = "Enter a user story")
-    String desc = null;
+    String[] desc;
 
     @CommandLine.Option(
             names = {"--gloger"},
@@ -63,7 +66,7 @@ public class EnterUserStoryCommand implements Callable<Integer>, Command {
             UserStory userStory = new UserStory();
 
             userStory.setStoryId(id);
-            userStory.setDescription(desc);
+            userStory.setDescription(String.join(" ", desc));
             userStory.setGlogerVal(gloger);
 
             if (Objects.nonNull(actor)) {

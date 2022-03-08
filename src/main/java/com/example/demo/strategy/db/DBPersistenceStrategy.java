@@ -1,10 +1,10 @@
-package com.example.demo.persistence;
+package com.example.demo.strategy.db;
 
 import org.bson.Document;
 
 import java.util.List;
 
-public interface PersistenceStrategy<UserStory> {
+public interface DBPersistenceStrategy<UserStory> {
     void openConnection() throws PersistenceException;
     void closeConnection() throws PersistenceException;
     void save(List<UserStory> stories) throws PersistenceException;

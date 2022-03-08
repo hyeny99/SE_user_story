@@ -1,19 +1,21 @@
 package com.example.demo.container;
 
 import com.example.demo.data.UserStory;
-import com.example.demo.persistence.PersistenceException;
-import com.example.demo.persistence.PersistenceStrategy;
-import com.example.demo.persistence.PersistenceStrategyMongoDB;
+import com.example.demo.strategy.db.DBPersistenceStrategy;
+import com.example.demo.strategy.db.PersistenceException;
+import com.example.demo.strategy.db.PersistenceStrategyMongoDB;
 import org.bson.Document;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Container {
     private List<UserStory> list = null;
+    private Stack<UserStory> stack = null;
     private static Container instance = null; // = new Container();
 
     // Reference to the internal strategy (e.g. MongoDB or Stream)
-    private PersistenceStrategy strategy = null;
+    private DBPersistenceStrategy strategy = null;
 
     // Flag to see, if a connection is opened
     private boolean connectionOpen = false;
@@ -53,6 +55,7 @@ public class Container {
     private Container(){
         System.out.println("Container is instantiated! (constructor) ");
         this.list = new ArrayList<UserStory>();
+        this.stack = new Stack<>();
         try {
             this.strategy = new PersistenceStrategyMongoDB();
         } catch (PersistenceException e) {
@@ -91,6 +94,7 @@ public class Container {
             throw ex;
         }
         list.add(userStory);
+        stack.push(userStory);
     }
 
     /**
@@ -111,19 +115,22 @@ public class Container {
      * Method for deleting an object with a given id.
      *
      */
-    public String deleteUserStory(Integer id ) {
-        UserStory userStory = getUserStory( id );
-        if (userStory == null)
-            return "Member is not found- ERROR";
-        else {
-            list.remove(userStory);
-            return "User story with ID" + id + " has been deleted.";
-        }
+    public void deleteUserStory(Integer id ) {
+
+        // filter-map-reduced pattern used
+        list.stream()
+                .filter(userStory -> userStory.getID().equals(id))
+                .findFirst()
+                .filter(userStory -> userStory != null)
+                .map(userStory -> {
+                    return list.remove(userStory);
+                });
     }
 
     public void undoEnter() {
-        if (!list.isEmpty()) {
-            this.list.remove(this.list.size() - 1);
+        if (!stack.empty()) {
+            UserStory user = stack.pop();
+            deleteUserStory(user.getID());
         }
     }
 
@@ -142,6 +149,7 @@ public class Container {
      *
      */
     private UserStory getUserStory(Integer id) {
+
         for ( UserStory userStory : list) {
             if (id.equals(userStory.getID())){
                 return userStory;
@@ -190,7 +198,7 @@ public class Container {
      * (not really relevant in the context of this assignment)
      *
      */
-    public void setPersistenceStrategie(PersistenceStrategy persistenceStrategy) {
+    public void setPersistenceStrategie(DBPersistenceStrategy strategy) {
         if (connectionOpen == true) {
             try {
                 this.closeConnection();
@@ -199,7 +207,7 @@ public class Container {
                 e.printStackTrace();
             }
         }
-        this.strategy = persistenceStrategy;
+        this.strategy = strategy;
     }
 
 

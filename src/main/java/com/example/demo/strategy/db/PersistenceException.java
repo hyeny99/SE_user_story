@@ -1,4 +1,4 @@
-package com.example.demo.persistence;
+package com.example.demo.strategy.db;
 
 public class PersistenceException extends Exception{
     private final ExceptionType exceptionType;

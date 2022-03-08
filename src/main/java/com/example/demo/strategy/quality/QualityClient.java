@@ -2,7 +2,7 @@ package com.example.demo.strategy.quality;
 
 import com.example.demo.container.ContainerRepo;
 import com.example.demo.data.UserStory;
-import com.example.demo.repo.ActorRepo;
+import com.example.demo.container.ActorContainerRepo;
 import com.example.demo.strategy.db.PersistenceException;
 import org.bson.Document;
 
@@ -11,7 +11,7 @@ import java.util.List;
 public class QualityClient {
 
     private final ContainerRepo containerRepo;
-    private final ActorRepo actorRepo;
+    private final ActorContainerRepo actorContainerRepo;
 
     private QualityStrategy qualityDescStrategy;
 
@@ -22,7 +22,7 @@ public class QualityClient {
         this.qualityDescStrategy = qualityDescStrategy;
 
         containerRepo = new ContainerRepo();
-        actorRepo = new ActorRepo();
+        actorContainerRepo = new ActorContainerRepo();
         desc = "";
         val = 100;
     }
@@ -42,7 +42,7 @@ public class QualityClient {
             }
 
             if (document.get("actor") == null ||
-                    document.get("actor").equals("") || !actorRepo.isRegistered((String) document.get("actor"))) {
+                    document.get("actor").equals("") || !actorContainerRepo.isRegistered((String) document.get("actor"))) {
                 this.val -= 20;
                 this.desc += this.qualityDescStrategy.notRegisteredActor((String) document.get("actor"));
             }

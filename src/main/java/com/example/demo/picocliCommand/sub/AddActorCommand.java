@@ -2,7 +2,7 @@ package com.example.demo.picocliCommand.sub;
 
 import com.example.demo.strategy.db.PersistenceException;
 import com.example.demo.picocliCommand.Command;
-import com.example.demo.repo.ActorRepo;
+import com.example.demo.container.ActorContainerRepo;
 import picocli.CommandLine;
 
 import java.util.concurrent.Callable;
@@ -24,17 +24,17 @@ public class AddActorCommand implements Callable<Integer>, Command {
             required = true)
     String role;
 
-    private final ActorRepo actorRepo;
+    private final ActorContainerRepo actorContainerRepo;
 
     public AddActorCommand() {
-        actorRepo = new ActorRepo();
+        actorContainerRepo = new ActorContainerRepo();
     }
 
     @Override
     public Integer call() throws Exception {
 
         try {
-            actorRepo.registerActor(actorRepo.createActor(role));
+            actorContainerRepo.registerActor(actorContainerRepo.createActor(role));
             System.out.println("New actor successfully created!\n");
 
         } catch (Exception e) {
@@ -45,7 +45,7 @@ public class AddActorCommand implements Callable<Integer>, Command {
 
     public void undo() {
         try {
-            actorRepo.deregisterActor();
+            actorContainerRepo.deregisterActor();
 
         } catch (PersistenceException e) {
             e.printStackTrace();

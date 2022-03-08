@@ -2,7 +2,7 @@ package com.example.test;
 
 import com.example.demo.data.Actor;
 import com.example.demo.strategy.db.PersistenceException;
-import com.example.demo.repo.ActorRepo;
+import com.example.demo.container.ActorContainerRepo;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,14 +12,14 @@ import java.util.List;
 
 class AddActorCommandTest {
 
-    ActorRepo actorRepo;
+    ActorContainerRepo actorContainerRepo;
 
     String role;
     List<Actor> actors;
 
     @BeforeEach
     void setUp() {
-        actorRepo = new ActorRepo();
+        actorContainerRepo = new ActorContainerRepo();
         role = "Student";
         actors = new ArrayList<>();
     }
@@ -31,10 +31,10 @@ class AddActorCommandTest {
 
     @Test
     void call() throws PersistenceException {
-        actorRepo.registerActor(actorRepo.createActor(role));
+        actorContainerRepo.registerActor(actorContainerRepo.createActor(role));
         registerActor();
-        Assert.assertEquals(actors.size(), actorRepo.getCurrentList().size(), 1);
-        Assert.assertEquals(actors.get(0).getRole(), actorRepo.getCurrentList().get(0).getRole());
+        Assert.assertEquals(actors.size(), actorContainerRepo.getCurrentList().size(), 1);
+        Assert.assertEquals(actors.get(0).getRole(), actorContainerRepo.getCurrentList().get(0).getRole());
     }
 
     void deregisterActor() {
@@ -45,9 +45,9 @@ class AddActorCommandTest {
 
     @Test
     void undo() throws PersistenceException {
-        actorRepo.deregisterActor();
+        actorContainerRepo.deregisterActor();
         deregisterActor();
-        Assert.assertEquals(actors.size(), actorRepo.getCurrentList().size(), 0);
+        Assert.assertEquals(actors.size(), actorContainerRepo.getCurrentList().size(), 0);
     }
 
 

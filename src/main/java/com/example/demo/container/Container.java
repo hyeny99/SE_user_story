@@ -8,10 +8,11 @@ import org.bson.Document;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Container {
     private List<UserStory> list = null;
-    private Stack<UserStory> stack = null;
+    //private Stack<UserStory> stack = null;
     private static Container instance = null; // = new Container();
 
     // Reference to the internal strategy (e.g. MongoDB or Stream)
@@ -55,7 +56,7 @@ public class Container {
     private Container(){
         System.out.println("Container is instantiated! (constructor) ");
         this.list = new ArrayList<UserStory>();
-        this.stack = new Stack<>();
+        // this.stack = new Stack<>();
         try {
             this.strategy = new PersistenceStrategyMongoDB();
         } catch (PersistenceException e) {
@@ -69,8 +70,13 @@ public class Container {
      * Method for getting the internal list. e.g. from a View-object
      */
     public List getCurrentList() {
-        list.sort(Comparator.comparing(UserStory::getGlogerVal).reversed());
-        return this.list;
+        //list.sort(Comparator.comparing(UserStory::getGlogerVal).reversed());
+        List<UserStory> sorted = list.stream()
+                .filter(userStory -> !userStory.getGlogerVal().isNaN())
+                .sorted(Comparator.comparing(UserStory::getGlogerVal)
+                        .reversed())
+                .collect(Collectors.toList());
+        return sorted;
     }
 
     public List findByState(String state) {
@@ -94,7 +100,7 @@ public class Container {
             throw ex;
         }
         list.add(userStory);
-        stack.push(userStory);
+        //stack.push(userStory);
     }
 
     /**
@@ -128,10 +134,11 @@ public class Container {
     }
 
     public void undoEnter() {
-        if (!stack.empty()) {
-            UserStory user = stack.pop();
-            deleteUserStory(user.getID());
-        }
+//        if (!stack.empty()) {
+//            UserStory user = stack.pop();
+//            deleteUserStory(user.getID());
+//        }
+        this.list.remove(this.list.size() - 1);
     }
 
     /*

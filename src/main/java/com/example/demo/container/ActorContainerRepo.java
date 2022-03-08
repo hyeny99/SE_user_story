@@ -1,4 +1,4 @@
-package com.example.demo.repo;
+package com.example.demo.container;
 
 import com.example.demo.container.ActorContainer;
 import com.example.demo.data.Actor;
@@ -6,11 +6,11 @@ import com.example.demo.strategy.db.PersistenceException;
 
 import java.util.List;
 
-public class ActorRepo {
+public class ActorContainerRepo {
     private String role;
     private final ActorContainer actorContainer;
 
-    public ActorRepo() {
+    public ActorContainerRepo() {
         actorContainer = ActorContainer.getInstance();
     }
 

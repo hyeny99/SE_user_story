@@ -2,7 +2,7 @@ package com.example.test;
 
 import com.example.demo.data.Actor;
 import com.example.demo.strategy.db.PersistenceException;
-import com.example.demo.repo.ActorRepo;
+import com.example.demo.container.ActorContainerRepo;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 class ActorCommandTest {
-    ActorRepo actorRepo;
+    ActorContainerRepo actorContainerRepo;
     List<Actor> actorList;
 
     Actor actor1;
@@ -19,7 +19,7 @@ class ActorCommandTest {
 
     @BeforeEach
     void setUp() {
-        actorRepo = new ActorRepo();
+        actorContainerRepo = new ActorContainerRepo();
         actorList = new ArrayList<>();
 
         actor1 = new Actor("Student");
@@ -43,10 +43,10 @@ class ActorCommandTest {
     @Test
     void call() throws PersistenceException {
         String output = "";
-        actorRepo.registerActor(actor1);
-        actorRepo.registerActor(actor2);
+        actorContainerRepo.registerActor(actor1);
+        actorContainerRepo.registerActor(actor2);
 
-        List<Actor> actors = actorRepo.getCurrentList();
+        List<Actor> actors = actorContainerRepo.getCurrentList();
 
         if (actors.isEmpty()) {
             output = "no actors given";

@@ -4,7 +4,7 @@ import com.example.demo.container.ContainerException;
 import com.example.demo.data.Actor;
 import com.example.demo.data.UserStory;
 import com.example.demo.strategy.db.PersistenceException;
-import com.example.demo.repo.ActorRepo;
+import com.example.demo.container.ActorContainerRepo;
 import com.example.demo.container.ContainerRepo;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,14 +49,14 @@ class EnterUserStoryCommandTest {
     @Test
     void call() throws ContainerException, PersistenceException {
         UserStory userStory = new UserStory();
-        ActorRepo actorRepo = new ActorRepo();
+        ActorContainerRepo actorContainerRepo = new ActorContainerRepo();
 
         userStory.setStoryId(userId);
         userStory.setDescription(desc);
         userStory.setGlogerVal(gloger);
 
         if (Objects.nonNull(actor)) {
-            Actor a = actorRepo.createActor(actor);
+            Actor a = actorContainerRepo.createActor(actor);
             userStory.setActor(a);
         }
 

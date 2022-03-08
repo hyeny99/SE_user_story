@@ -2,7 +2,7 @@ package com.example.demo.picocliCommand.sub;
 
 
 import com.example.demo.data.Actor;
-import com.example.demo.repo.ActorRepo;
+import com.example.demo.container.ActorContainerRepo;
 import picocli.CommandLine;
 
 import java.util.List;
@@ -19,16 +19,16 @@ import java.util.concurrent.Callable;
         footer = "%nDeveloped by Hyewon Jeon")
 public class ActorCommand implements Callable<Integer> {
 
-    private final ActorRepo actorRepo;
+    private final ActorContainerRepo actorContainerRepo;
     public ActorCommand () {
-        actorRepo = new ActorRepo();
+        actorContainerRepo = new ActorContainerRepo();
     }
 
     @Override
     public Integer call() throws Exception {
 
         try {
-           List<Actor> actors = actorRepo.getCurrentList();
+           List<Actor> actors = actorContainerRepo.getCurrentList();
            if (actors.isEmpty()) {
                System.out.println("no actors given");
            } else {

@@ -1,6 +1,6 @@
 package com.example.demo.strategy.db;
 import com.example.demo.data.UserStory;
-import com.example.demo.repo.ActorRepo;
+import com.example.demo.container.ActorContainerRepo;
 import com.mongodb.client.*;
 import org.bson.Document;
 
@@ -12,7 +12,7 @@ import static com.mongodb.client.model.Updates.set;
 
 public class PersistenceStrategyMongoDB implements DBPersistenceStrategy<UserStory> {
 
-    private ActorRepo actorRepo;
+    private ActorContainerRepo actorContainerRepo;
 
     private MongoClient client;
     private MongoDatabase database;
@@ -74,12 +74,12 @@ public class PersistenceStrategyMongoDB implements DBPersistenceStrategy<UserSto
             }
 
             List<UserStory> userStories = new ArrayList<>();
-            actorRepo = new ActorRepo();
+            actorContainerRepo = new ActorContainerRepo();
 
             for (Document document : documents) {
 
                 UserStory userStory = new UserStory((Integer) document.get("storyId"), (String) document.get("description"),
-                        (Double) document.get("glogerVal"), actorRepo.createActor((String) document.get("actor")), (String) document.get("state"));
+                        (Double) document.get("glogerVal"), actorContainerRepo.createActor((String) document.get("actor")), (String) document.get("state"));
 
                 userStories.add(userStory);
             }

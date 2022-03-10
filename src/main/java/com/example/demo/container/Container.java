@@ -2,6 +2,7 @@ package com.example.demo.container;
 
 import com.example.demo.data.UserStory;
 import com.example.demo.strategy.db.DBPersistenceStrategy;
+import com.example.demo.strategy.db.DBclient;
 import com.example.demo.strategy.db.PersistenceException;
 import com.example.demo.strategy.db.PersistenceStrategyMongoDB;
 import org.bson.Document;
@@ -16,7 +17,7 @@ public class Container {
     private static Container instance = null; // = new Container();
 
     // Reference to the internal strategy (e.g. MongoDB or Stream)
-    private DBPersistenceStrategy strategy = null;
+    private DBclient client = null;
 
     // Flag to see, if a connection is opened
     private boolean connectionOpen = false;
@@ -58,7 +59,7 @@ public class Container {
         this.list = new ArrayList<UserStory>();
         // this.stack = new Stack<>();
         try {
-            this.strategy = new PersistenceStrategyMongoDB();
+            this.client = new DBclient(new PersistenceStrategyMongoDB());
         } catch (PersistenceException e) {
             e.printStackTrace();
         }
@@ -170,14 +171,14 @@ public class Container {
      * Method for loading objects. Uses the internally stored strategy object
      */
     public List<UserStory> load() throws PersistenceException {
-        if (this.strategy == null)
+        if (this.client == null)
             throw new PersistenceException( PersistenceException.ExceptionType.NoStrategyIsSet,  "Strategy not initialized");
 
         if (connectionOpen == false) {
             this.openConnection();
             connectionOpen = true;
         }
-        List<UserStory> dbStories = this.strategy.load();
+        List<UserStory> dbStories = this.client.load();
         Set<UserStory> dbSet = new TreeSet<>(Comparator.comparing(UserStory::getID));
         dbSet.addAll(dbStories);
         dbSet.addAll(this.list);
@@ -187,7 +188,7 @@ public class Container {
     }
 
     public List<Document> query(String key, String value) throws PersistenceException {
-        if (this.strategy == null)
+        if (this.client == null)
             throw new PersistenceException( PersistenceException.ExceptionType.NoStrategyIsSet,  "Strategy not initialized");
 
         if (connectionOpen == false) {
@@ -195,7 +196,7 @@ public class Container {
             connectionOpen = true;
         }
 
-        return this.strategy.query(key, value);
+        return this.client.query(key, value);
     }
 
     /**
@@ -214,7 +215,7 @@ public class Container {
                 e.printStackTrace();
             }
         }
-        this.strategy = strategy;
+        this.client = new DBclient(strategy);
     }
 
 
@@ -222,7 +223,7 @@ public class Container {
      * Method for storing objects. Uses the internally stored strategy object
      */
     public void store() throws PersistenceException {
-        if (this.strategy == null)
+        if (this.client == null)
             throw new PersistenceException( PersistenceException.ExceptionType.NoStrategyIsSet,
                     "Strategy not initialized");
 
@@ -230,12 +231,12 @@ public class Container {
             this.openConnection();
             connectionOpen = true;
         }
-        this.strategy.save( this.list );
+        this.client.save( this.list );
     }
 
 
     public Document findById(Integer id)  throws PersistenceException {
-        if (this.strategy == null)
+        if (this.client == null)
             throw new PersistenceException( PersistenceException.ExceptionType.NoStrategyIsSet,
                     "Strategy not initialized");
 
@@ -243,11 +244,11 @@ public class Container {
             this.openConnection();
             connectionOpen = true;
         }
-        return this.strategy.findById(id);
+        return this.client.findById(id);
     }
 
     public void update(int id, String key, String value) throws PersistenceException {
-        if (this.strategy == null)
+        if (this.client == null)
             throw new PersistenceException( PersistenceException.ExceptionType.NoStrategyIsSet,
                     "Strategy not initialized");
 
@@ -255,12 +256,12 @@ public class Container {
             this.openConnection();
             connectionOpen = true;
         }
-        strategy.update(id, key, value);
+        client.update(id, key, value);
     }
 
     private void openConnection() throws PersistenceException {
         try {
-            this.strategy.openConnection();
+            this.client.openConnection();
             connectionOpen = true;
         } catch( java.lang.UnsupportedOperationException e ) {
             throw new PersistenceException( PersistenceException.ExceptionType.ImplementationNotAvailable , "Not implemented!" );
@@ -269,7 +270,7 @@ public class Container {
 
     private void closeConnection() throws PersistenceException {
         try {
-            this.strategy.closeConnection();
+            this.client.closeConnection();
             connectionOpen = false;
         } catch( java.lang.UnsupportedOperationException e ) {
             throw new PersistenceException( PersistenceException.ExceptionType.ImplementationNotAvailable , "Not implemented!" );

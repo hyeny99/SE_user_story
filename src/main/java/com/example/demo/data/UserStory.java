@@ -43,11 +43,6 @@ public class UserStory implements Serializable {
         this.description = description;
     }
 
-    public UserStory(Integer ID, Double glogerVal) {
-        this.ID = ID;
-        this.glogerVal = glogerVal;
-    }
-
     public Integer getID() {
         return ID;
     }

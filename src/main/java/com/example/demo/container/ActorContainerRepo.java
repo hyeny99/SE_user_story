@@ -14,15 +14,6 @@ public class ActorContainerRepo {
         actorContainer = ActorContainer.getInstance();
     }
 
-    public String getRole() {
-        return this.role;
-    }
-
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
     public Actor createActor(String role) throws PersistenceException {
         return actorContainer.createActor(role);
     }
